@@ -30,7 +30,7 @@ jobs:
         ANALYZE_RESULT=$(npm run analyze)
         npm run capture::server
         npm run capture::browser
-        ANALYZE_RESULT=$(echo ${ANALYZE_RESULT:0:950} | sed "s/'/\\u0027/g" | sed "s/://g" | sed "s/>//g" | sed "s/@//g")
+        ANALYZE_RESULT=$(echo ${ANALYZE_RESULT:0:950} | sed "s/'/\\u0027/g" | sed "s/\n//g")
 
         echo "::set-output name=analyze-result::$ANALYZE_RESULT"
 
