@@ -43,6 +43,7 @@ jobs:
         echo $ESCAPED_CLI_LOG
         ESCAPED_CLI_LOG=$(echo $LOG_CLI | sed s/\"/\\\"/)
         echo $ESCAPED_CLI_LOG
+        echo '::set-output name=analyze_result::"$ESCAPED_CLI_LOG"'
 
     - name: Post to PR
       id: post_to_PR
