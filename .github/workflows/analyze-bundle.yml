@@ -52,4 +52,8 @@ jobs:
         BROWSER_IMAGE_URL: ${{ steps.upload_browser_result.outputs.browser_download_url }}
         DEBUG1: ${{ steps.debug.outputs.debug1 }}
       run: |
-        curl -X POST $COMMENT_URL -H "Content-Type: application/json" -H "Authorization: token $GITHUB_TOKEN" --data '{ "body": "```'"$CLI_LOG"'```" }'
+        curl \
+        -X POST $COMMENT_URL \
+        -H "Content-Type: application/json" \
+        -H "Authorization: token $GITHUB_TOKEN" \
+        --data '{ "body": "##Bundle Analyze\n###TreeMap\n###CLI Log\n```'"$CLI_LOG"'```" }'
