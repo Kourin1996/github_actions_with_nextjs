@@ -30,7 +30,7 @@ jobs:
         ANALYZE_RESULT=$(npm run analyze)
         npm run capture::server
         npm run capture::browser
-        echo '::set-output name=analyze_result::"$ANALYZE_RESULT"'
+        echo "::set-output name=analyze_result::$ANALYZE_RESULT"
         echo 'result\n'
         echo $ANALYZE_RESULT
 
@@ -43,7 +43,7 @@ jobs:
         echo $ESCAPED_CLI_LOG
         ESCAPED_CLI_LOG=$(echo $ESCAPED_CLI_LOG | sed s/\"/\\\"/)
         echo $ESCAPED_CLI_LOG
-        echo '::set-output name=analyze_result::"$ESCAPED_CLI_LOG"'
+        echo ""::set-output name=analyze_result::$ESCAPED_CLI_LOG"
 
     - name: Post to PR
       id: post_to_PR
