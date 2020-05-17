@@ -5,11 +5,23 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "analyze": "cross-env ANALYZE=true next build",
+    "capture::server": "pageres .analyze/server.html --filename='.analyze/server' --hide='.Sidebar__container'",
+    "capture::browser": "pageres .analyze/browser.html --filename='.analyze/browser' --hide='.Sidebar__container'"
   },
   "dependencies": {
+    "dotenv": "^8.2.0",
     "next": "9.4.1",
+    "next-build-id": "^3.0.0",
+    "next-compose-plugins": "^2.2.0",
+    "next-offline": "^5.0.2",
     "react": "16.13.1",
-    "react-dom": "16.13.1"
+    "react-dom": "16.13.1",
+    "webpack-bundle-analyzer": "^3.7.0"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.2",
+    "pageres-cli": "^5.0.0"
   }
 }
