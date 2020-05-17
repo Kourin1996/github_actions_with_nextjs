@@ -44,12 +44,9 @@ jobs:
         COMMENT_URL: ${{ github.event.pull_request.comments_url }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         CLI_LOG: ${{ steps.analyze_bundle_size.outputs.analyze-result }}
-        SERVER_IMAGE_URL: ${{ steps.upload_server_result.outputs.browser_download_url }}
-        BROWSER_IMAGE_URL: ${{ steps.upload_browser_result.outputs.browser_download_url }}
-        DEBUG1: ${{ steps.debug.outputs.debug1 }}
       run: |
         curl \
         -X POST $COMMENT_URL \
         -H "Content-Type: application/json" \
         -H "Authorization: token $GITHUB_TOKEN" \
-        --data '{ "body": "## Bundle Size Analysis\n### TreeMap\n### CLI Log\n```'"$CLI_LOG"'```" }'
+        --data '{ "body": "## Bundle Size Analysis\n```'"$CLI_LOG"'```" }'
