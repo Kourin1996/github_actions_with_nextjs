@@ -39,7 +39,7 @@ jobs:
       env:
         CLI_LOG: ${{ steps.analyze_bundle_size.outputs.analyze-result }}
       run: |
-        DATA='{ "body": "'$CLI_LOG'" }'
+        DATA='{ "body": "'"$CLI_LOG"'" }'
         echo $DATA
         echo "::set-output name=debug1::$DATA"
 
@@ -54,4 +54,4 @@ jobs:
         BROWSER_IMAGE_URL: ${{ steps.upload_browser_result.outputs.browser_download_url }}
         DEBUG1: ${{ steps.debug.outputs.debug1 }}
       run: |
-        curl -X POST $COMMENT_URL -H "Content-Type: application/json" -H "Authorization: token $GITHUB_TOKEN" --data '{ "body": "'$CLI_LOG'" }'
+        curl -X POST $COMMENT_URL -H "Content-Type: application/json" -H "Authorization: token $GITHUB_TOKEN" --data '{ "body": "'"$CLI_LOG"'" }'
