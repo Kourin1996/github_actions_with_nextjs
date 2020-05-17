@@ -54,5 +54,5 @@ jobs:
         BROWSER_IMAGE_URL: ${{ steps.upload_browser_result.outputs.browser_download_url }}
         DEBUG1: ${{ steps.debug.outputs.debug1 }}
       run: |
-        TEST="s010 analyze homerunner"
+        TEST="sanalyzehomerunner"
         curl -X POST $COMMENT_URL -H "Content-Type: application/json" -H "Authorization: token $GITHUB_TOKEN" --data '{ "body": "'$TEST'" }'
