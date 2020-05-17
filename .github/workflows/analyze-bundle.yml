@@ -30,17 +30,16 @@ jobs:
         npm run analyze | tee .log
         npm run capture::server
         npm run capture::browser
-        ANALYZE_RESULT=$(cat .log | sed -e ':a' -e 'N' -e '$!ba' -e 's/\n/\\n/g') | sed -e '/^.*\(Page *Size *First Load JS.*\)$/\1/'
+        ANALYZE_RESULT=$(cat .log | sed -n -e '/^Page.*$/,$p' | sed -e ':a' -e 'N' -e '$!ba' -e 's/\n/\\n/g')
 
         echo "::set-output name=analyze-result::$ANALYZE_RESULT"
-        
+
     - name: debug
       id: debug
       env:
         CLI_LOG: ${{ steps.analyze_bundle_size.outputs.analyze-result }}
       run: |
-        
-        echo "::set-output name=debug1::$DATA"
+        echo "::set-output name=debug1::$CLI_LOG"
 
 
     - name: Post to PR
@@ -53,4 +52,4 @@ jobs:
         BROWSER_IMAGE_URL: ${{ steps.upload_browser_result.outputs.browser_download_url }}
         DEBUG1: ${{ steps.debug.outputs.debug1 }}
       run: |
-        curl -X POST $COMMENT_URL -H "Content-Type: application/json" -H "Authorization: token $GITHUB_TOKEN" --data '{ "body": "'"```$CLI_LOG```"'" }'
+        curl -X POST $COMMENT_URL -H "Content-Type: application/json" -H "Authorization: token $GITHUB_TOKEN" --data '{ "body": "```'"$CLI_LOG"'```" }'
