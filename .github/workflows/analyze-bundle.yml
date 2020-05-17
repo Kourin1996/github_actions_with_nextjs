@@ -27,10 +27,10 @@ jobs:
     - name: Analyze Bundle Size
       id: analyze_bundle_size
       run: |
-        ANALYZE_RESULT=$(npm run analyze)
+        npm run analyze | tee .log
         npm run capture::server
         npm run capture::browser
-        ANALYZE_RESULT=$(echo $ANALYZE_RESULT)
+        ANALYZE_RESULT=$(cat .log |  sed -e ':a' -e 'N' -e '$!ba' -e 's/\n/\\n/g')
 
         echo "::set-output name=analyze-result::$ANALYZE_RESULT"
 
@@ -39,8 +39,7 @@ jobs:
       env:
         CLI_LOG: ${{ steps.analyze_bundle_size.outputs.analyze-result }}
       run: |
-        DATA='{ "body": "'"$CLI_LOG"'" }'
-        echo $DATA
+        
         echo "::set-output name=debug1::$DATA"
 
 
