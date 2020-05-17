@@ -31,6 +31,8 @@ jobs:
         npm run capture::server
         npm run capture::browser
         echo '::set-output name=analyze_result::"$ANALYZE_RESULT"'
+        echo 'result\n'
+        echo $ANALYZE_RESULT
     
     - name: Create Release
       id: create_release
@@ -74,11 +76,9 @@ jobs:
         SERVER_IMAGE_URL: ${{ steps.upload_server_result.outputs.browser_download_url }}
         BROWSER_IMAGE_URL: ${{ steps.upload_browser_result.outputs.browser_download_url }}
       run: |
-        ESCAPED_CLILOG = $(printf "%q" $CLI_LOG)
-        echo $ESCAPED_CLILOG
         curl \
           -X POST \
           $COMMENT_URL \
           -H "Content-Type: application/json" \
           -H "Authorization: token $GITHUB_TOKEN" \
-          --data '{ "body": "Analyzed Bundle Size\n![Server]('$SERVER_IMAGE_URL')\n![Browser]('$BROWSER_IMAGE_URL')\nCLI Result\n```'$ESCAPED_CLILOG'```" }'
+          --data '{ "body": "Analyzed Bundle Size\n![Server]('$SERVER_IMAGE_URL')\n![Browser]('$BROWSER_IMAGE_URL')\nCLI Result\n```'$CLI_LOG'```" }'
