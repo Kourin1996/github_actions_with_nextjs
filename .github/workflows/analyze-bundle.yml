@@ -39,9 +39,9 @@ jobs:
       env:
         CLI_LOG: ${{ steps.analyze_bundle_size.outputs.analyze_result }}
       run: |
-        ESCAPED_CLI_LOG=$(echo $LOG_CLI | sed s/\'/\\\'/)
+        ESCAPED_CLI_LOG=$(echo $CLI_LOG | sed s/\'/\\\'/)
         echo $ESCAPED_CLI_LOG
-        ESCAPED_CLI_LOG=$(echo $LOG_CLI | sed s/\"/\\\"/)
+        ESCAPED_CLI_LOG=$(echo $ESCAPED_CLI_LOG | sed s/\"/\\\"/)
         echo $ESCAPED_CLI_LOG
         echo '::set-output name=analyze_result::"$ESCAPED_CLI_LOG"'
 
@@ -54,9 +54,9 @@ jobs:
         SERVER_IMAGE_URL: ${{ steps.upload_server_result.outputs.browser_download_url }}
         BROWSER_IMAGE_URL: ${{ steps.upload_browser_result.outputs.browser_download_url }}
       run: |
-        ESCAPED_CLI_LOG=$(echo $LOG_CLI | sed s/\'/\\\'/)
+        ESCAPED_CLI_LOG=$(echo $CLI_LOG | sed s/\'/\\\'/)
         echo $ESCAPED_CLI_LOG
-        ESCAPED_CLI_LOG=$(echo $LOG_CLI | sed s/\"/\\\"/)
+        ESCAPED_CLI_LOG=$(echo $ESCAPED_CLI_LOG | sed s/\"/\\\"/)
         echo $ESCAPED_CLI_LOG
         curl \
           -X POST \
