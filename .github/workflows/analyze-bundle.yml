@@ -55,4 +55,4 @@ jobs:
           $COMMENT_URL \
           -H "Content-Type: application/json" \
           -H "Authorization: token $GITHUB_TOKEN" \
-          --data '{ "body": "Analyzed Bundle Size\n![Server]('$SERVER_IMAGE_URL')\n![Browser]('$BROWSER_IMAGE_URL')\nCLI Result\n```'$CLI_LOG'```" }'
+          --data '{ "body": "```'$CLI_LOG'```" }'
