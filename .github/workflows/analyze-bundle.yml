@@ -30,11 +30,9 @@ jobs:
         ANALYZE_RESULT=$(npm run analyze)
         npm run capture::server
         npm run capture::browser
-        ANALYZE_RESULT=$(echo $ANALYZE_RESULT | sed 's/\"/\\\"/')
-        ANALYZE_RESULT=$(echo $ANALYZE_RESULT | sed 's/\n/\\\n/')
+        ANALYZE_RESULT=$(echo $ANALYZE_RESULT | sed 's/"/\\"/')
 
         echo "::set-output name=analyze-result::$ANALYZE_RESULT"
-        echo "::debug::$ANALYZE_RESULT"
 
     - name: debug
       id: debug
@@ -57,4 +55,4 @@ jobs:
           $COMMENT_URL \
           -H "Content-Type: application/json" \
           -H "Authorization: token $GITHUB_TOKEN" \
-          --data '{ "body": "'$CLI_LOG'" }'
+          --data '{ "body": "Analyzed Bundle Size\n![Server]('$SERVER_IMAGE_URL')\n![Browser]('$BROWSER_IMAGE_URL')\nCLI Result\n```'$CLI_LOG'```" }'
