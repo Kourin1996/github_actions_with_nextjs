@@ -34,6 +34,16 @@ jobs:
         echo 'result\n'
         echo $ANALYZE_RESULT
 
+    - name: debug
+      id: debug
+      env:
+        CLI_LOG: ${{ steps.analyze_bundle_size.outputs.analyze_result }}
+      run: |
+        ESCAPED_CLI_LOG=$(echo $LOG_CLI | sed s/\'/\\\'/)
+        echo $ESCAPED_CLI_LOG
+        ESCAPED_CLI_LOG=$(echo $LOG_CLI | sed s/\"/\\\"/)
+        echo $ESCAPED_CLI_LOG
+
     - name: Post to PR
       id: post_to_PR
       env:
@@ -52,4 +62,4 @@ jobs:
           $COMMENT_URL \
           -H "Content-Type: application/json" \
           -H "Authorization: token $GITHUB_TOKEN" \
-          --data '{ "body": "Analyzed Bundle Size\n![Server]('$SERVER_IMAGE_URL')\n![Browser]('$BROWSER_IMAGE_URL')\nCLI Result\n```'$CLI_LOG'```" }'
+          --data '{ "body": "Analyzed Bundle Size\n![Server]('$SERVER_IMAGE_URL')\n![Browser]('$BROWSER_IMAGE_URL')\nCLI Result\n```'$ESCAPED_CLI_LOG'```" }'
