@@ -31,16 +31,12 @@ jobs:
         npm run capture::server
         npm run capture::browser
         ANALYZE_RESULT=$(cat .log | sed -n -e '/^Page.*$/,$p' | sed -e ':a' -e 'N' -e '$!ba' -e 's/\n/\\n/g')
-
         echo "::set-output name=analyze-result::$ANALYZE_RESULT"
 
-    - name: debug
-      id: debug
-      env:
-        CLI_LOG: ${{ steps.analyze_bundle_size.outputs.analyze-result }}
-      run: |
-        echo "::set-output name=debug1::$CLI_LOG"
-
+    - uses: actions/upload-artifact@v2
+      with:
+        name: bundle-size-treemap
+        path: .analyze/*.png
 
     - name: Post to PR
       id: post_to_PR
@@ -56,4 +52,4 @@ jobs:
         -X POST $COMMENT_URL \
         -H "Content-Type: application/json" \
         -H "Authorization: token $GITHUB_TOKEN" \
-        --data '{ "body": "##Bundle Analyze\n###TreeMap\n###CLI Log\n```'"$CLI_LOG"'```" }'
+        --data '{ "body": "## Bundle Size Analysis\n### TreeMap\n### CLI Log\n```'"$CLI_LOG"'```" }'
