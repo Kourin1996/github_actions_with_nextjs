@@ -50,11 +50,11 @@ jobs:
         SERVER_IMAGE_URL: ${{ steps.upload_server_result.outputs.browser_download_url }}
         BROWSER_IMAGE_URL: ${{ steps.upload_browser_result.outputs.browser_download_url }}
       run: |
-        body="```$CLI_LOG```"
-        data='{ "body": "'$body'" }'
+        BODY="```$CLI_LOG```"
+        DATA='{ "body": "'$DATA'" }'
         curl \
           -X POST \
           $COMMENT_URL \
           -H "Content-Type: application/json" \
           -H "Authorization: token $GITHUB_TOKEN" \
-          --data $data
+          --data $DATA
