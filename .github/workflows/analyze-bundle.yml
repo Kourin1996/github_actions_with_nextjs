@@ -39,7 +39,10 @@ jobs:
       env:
         CLI_LOG: ${{ steps.analyze_bundle_size.outputs.analyze-result }}
       run: |
-        echo $CLI_LOG
+        DATA='{ "body": "```'$CLI_LOG'```" }'
+        echo $DATA
+        echo "::set-output name=debug1::$DATA"
+
 
     - name: Post to PR
       id: post_to_PR
@@ -49,6 +52,7 @@ jobs:
         CLI_LOG: ${{ steps.analyze_bundle_size.outputs.analyze-result }}
         SERVER_IMAGE_URL: ${{ steps.upload_server_result.outputs.browser_download_url }}
         BROWSER_IMAGE_URL: ${{ steps.upload_browser_result.outputs.browser_download_url }}
+        DEBUG1: ${{ steps.debug.outputs.debug1 }}
       run: |
         curl \
           -X POST \
