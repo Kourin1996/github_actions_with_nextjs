@@ -31,8 +31,7 @@ jobs:
         npm run capture::server
         npm run capture::browser
         echo "::set-output name=analyze_result::$ANALYZE_RESULT\n"
-        echo 'result\n'
-        echo $ANALYZE_RESULT
+        echo "::debug::$ANALYZE_RESULT\n"
 
     - name: debug
       id: debug
@@ -40,9 +39,9 @@ jobs:
         CLI_LOG: ${{ steps.analyze_bundle_size.outputs.analyze_result }}
       run: |
         ESCAPED_CLI_LOG=$(echo $CLI_LOG | sed s/\'/\\\'/)
-        echo "::debug::$ESCAPED_CLI_LOG"
+        echo "::debug::$ESCAPED_CLI_LOG\n"
         ESCAPED_CLI_LOG=$(echo $ESCAPED_CLI_LOG | sed s/\"/\\\"/)
-        echo "::debug::$ESCAPED_CLI_LOG"
+        echo "::debug::$ESCAPED_CLI_LOG\n"
 
     - name: Post to PR
       id: post_to_PR
@@ -54,12 +53,10 @@ jobs:
         BROWSER_IMAGE_URL: ${{ steps.upload_browser_result.outputs.browser_download_url }}
       run: |
         ESCAPED_CLI_LOG=$(echo $CLI_LOG | sed s/\'/\\\'/)
-        echo $ESCAPED_CLI_LOG
         ESCAPED_CLI_LOG=$(echo $ESCAPED_CLI_LOG | sed s/\"/\\\"/)
-        echo $ESCAPED_CLI_LOG
         curl \
           -X POST \
           $COMMENT_URL \
           -H "Content-Type: application/json" \
           -H "Authorization: token $GITHUB_TOKEN" \
-          --data '{ "body": "Analyzed Bundle Size\n![Server]('$SERVER_IMAGE_URL')\n![Browser]('$BROWSER_IMAGE_URL')\nCLI Result\n```'$ESCAPED_CLI_LOG'```" }'
+          --data '{ "body": "'$ESCAPED_CLI_LOG'" }'
