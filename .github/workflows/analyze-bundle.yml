@@ -30,8 +30,8 @@ jobs:
         ANALYZE_RESULT=$(npm run analyze)
         npm run capture::server
         npm run capture::browser
-        ANALYZE_RESULT=$(echo $ANALYZE_RESULT | sed s/\'/\\\'/)
-        ANALYZE_RESULT=$(echo $ANALYZE_RESULT | sed s/\"/\\\"/)
+        ANALYZE_RESULT=$(echo $ANALYZE_RESULT | sed 's/\"/\\\"/')
+        ANALYZE_RESULT=$(echo $ANALYZE_RESULT | sed 's/\n/\\\n/')
 
         echo "::set-output name=analyze-result::$ANALYZE_RESULT"
         echo "::debug::$ANALYZE_RESULT"
@@ -52,11 +52,9 @@ jobs:
         SERVER_IMAGE_URL: ${{ steps.upload_server_result.outputs.browser_download_url }}
         BROWSER_IMAGE_URL: ${{ steps.upload_browser_result.outputs.browser_download_url }}
       run: |
-        ESCAPED_CLI_LOG=$(echo $CLI_LOG | sed s/\'/\\\'/)
-        ESCAPED_CLI_LOG=$(echo $ESCAPED_CLI_LOG | sed s/\"/\\\"/)
         curl \
           -X POST \
           $COMMENT_URL \
           -H "Content-Type: application/json" \
           -H "Authorization: token $GITHUB_TOKEN" \
-          --data '{ "body": "'$ESCAPED_CLI_LOG'" }'
+          --data '{ "body": "'$CLI_LOG'" }'
