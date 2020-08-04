@@ -27,58 +27,26 @@ jobs:
     - name: Analyze Bundle Size
       id: analyze_bundle_size
       run: |
-        ANALYZE_RESULT=$(npm run analyze)
+        npm run analyze | tee .log
         npm run capture::server
         npm run capture::browser
-        echo '::set-output name=analyze_result::"$ANALYZE_RESULT"'
-    
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1.0.0
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
-        draft: false
-        prerelease: true
-  
-    - name: Upload Image of Analysis Results for server
-      id: upload_server_result
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: .analyze/server.png
-        asset_name: server.png
-        asset_content_type: image/png
+        ANALYZE_RESULT=$(cat .log | sed -n -e '/^Page.*$/,$p' | sed -e ':a' -e 'N' -e '$!ba' -e 's/\n/\\n/g')
+        echo "::set-output name=analyze-result::$ANALYZE_RESULT"
 
-    - name: Upload Image of Analysis Results for browser
-      id: upload_browser_result
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - uses: actions/upload-artifact@v2
       with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: .analyze/browser.png
-        asset_name: browser.png
-        asset_content_type: image/png
+        name: bundle-size-treemap
+        path: .analyze/*.png
 
     - name: Post to PR
       id: post_to_PR
       env:
         COMMENT_URL: ${{ github.event.pull_request.comments_url }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        CLI_LOG: ${{ steps.analyze_bundle_size.outputs.analyze_result }}
-        SERVER_IMAGE_URL: ${{ steps.upload_server_result.outputs.browser_download_url }}
-        BROWSER_IMAGE_URL: ${{ steps.upload_browser_result.outputs.browser_download_url }}
+        CLI_LOG: ${{ steps.analyze_bundle_size.outputs.analyze-result }}
       run: |
-        ESCAPED_CLILOG = $(printf "%q" $CLI_LOG)
-        echo $ESCAPED_CLILOG
         curl \
-          -X POST \
-          $COMMENT_URL \
-          -H "Content-Type: application/json" \
-          -H "Authorization: token $GITHUB_TOKEN" \
-          --data '{ "body": "Analyzed Bundle Size\n![Server]('$SERVER_IMAGE_URL')\n![Browser]('$BROWSER_IMAGE_URL')\nCLI Result\n```'$ESCAPED_CLILOG'```" }'
+        -X POST $COMMENT_URL \
+        -H "Content-Type: application/json" \
+        -H "Authorization: token $GITHUB_TOKEN" \
+        --data '{ "body": "## Bundle Size Analysis\n```'"$CLI_LOG"'```" }'
