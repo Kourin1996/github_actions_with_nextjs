@@ -27,8 +27,7 @@ jobs:
     - name: build
       run: |
         npm run build
-        npm run export
-        exit 0
+        npm run export || exit 0
     - name: clean empty directories
       run: find ./out -type d -empty -delete
     - uses: jakejarvis/s3-sync-action@master
