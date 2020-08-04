@@ -7,7 +7,7 @@ export default function SSG(props) {
       <Link href='/ssg/page-2'>
         <a>Go to page2</a>
       </Link>
-      <img src="/public/test.png" />
+      <img src="/static/test.png" />
     </div>
   )
 }

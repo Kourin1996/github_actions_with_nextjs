@@ -5,7 +5,7 @@ export default function SSR(props) {
     <div className="container">
       <span>This is Server Side Rendering Page</span>
       <span>{props.message}</span>
-      <img src="/public/static/test.png" />
+      <img src="/static/test.png" />
 
       <Link href='/ssr/page-2'>
         <a>Go to page2</a>
