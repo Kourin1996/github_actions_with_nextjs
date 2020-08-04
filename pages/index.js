@@ -1,4 +1,5 @@
 import Head from 'next/head'
+import Link from 'next/link';
 
 export default function Home() {
   return (
@@ -16,6 +17,18 @@ export default function Home() {
         <p className="description">
           Get started by editing <code>pages/index.js</code>
         </p>
+
+        <Link href="/ssr">
+          <a>
+            Jump to Server Side Rendering Page
+          </a>
+        </Link>
+
+        <Link href="/ssg">
+          <a>
+            Jump to Static Page Page
+          </a>
+        </Link>
 
         <div className="grid">
           <a href="https://nextjs.org/docs" className="card">

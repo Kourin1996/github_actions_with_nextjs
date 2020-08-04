@@ -8,7 +8,8 @@
     "start": "next start",
     "analyze": "cross-env ANALYZE=true next build",
     "capture::server": "pageres .analyze/server.html --filename='.analyze/server' --hide='.Sidebar__container'",
-    "capture::browser": "pageres .analyze/browser.html --filename='.analyze/browser' --hide='.Sidebar__container'"
+    "capture::browser": "pageres .analyze/browser.html --filename='.analyze/browser' --hide='.Sidebar__container'",
+    "export": "NODE_ENV=production next export"
   },
   "dependencies": {
     "dotenv": "^8.2.0",
